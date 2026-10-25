@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace Deals - ManiDealsCampus</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/products.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <header></header>
+
+  <main class="marketplace-wrapper">
+    <div class="container marketplace-layout">
+      
+      <!-- Filters Sidebar -->
+      <aside class="filters-sidebar glass" id="marketplace-filters">
+        <div class="filter-section">
+          <h3 class="filter-title">Search & Locate</h3>
+          <div class="input-wrapper">
+            <input type="text" id="marketplace-search-box" class="input-control" style="padding-left:36px;" placeholder="Search keyword...">
+            <i class="fas fa-search" style="left:12px;"></i>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h3 class="filter-title">Price Filter</h3>
+          <div class="price-inputs">
+            <div class="price-input-group">
+              <label for="min-price">Min (₹)</label>
+              <input type="number" id="min-price" class="price-field" placeholder="0">
+            </div>
+            <div class="price-input-group">
+              <label for="max-price">Max (₹)</label>
+              <input type="number" id="max-price" class="price-field" placeholder="50000">
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h3 class="filter-title">Item Categories</h3>
+          <div class="checkbox-list">
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Books"> Books
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Stationery"> Stationery
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Electronics"> Electronics
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Hostel Essentials"> Hostel Essentials
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Furniture"> Furniture
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Cycles"> Cycles
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Sports"> Sports
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Lab Equipment"> Lab Equipment
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Gaming"> Gaming
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" class="category-filter" value="Others"> Others
+            </label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main product view -->
+      <section class="products-main">
+        <div class="products-main-header">
+          <div class="search-results-info">
+            Showing <span id="results-count">0</span> deals on your campus
+          </div>
+          
+          <div class="products-sort-controls">
+            <label for="sort-by">Sort By:</label>
+            <select id="sort-by" class="sort-select">
+              <option value="newest">Newest First</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dynamic Grid -->
+        <div class="featured-grid" id="products-grid">
+          <!-- Rendered by products.js -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/products.js"></script>
+</body>
+</html>

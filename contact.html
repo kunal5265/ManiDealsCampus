@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Support - ManiDealsCampus</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .contact-hero {
+      padding: calc(var(--header-height) + 4rem) 0 3rem;
+      text-align: center;
+    }
+    .contact-hero h1 {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .contact-hero p {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 3.5rem;
+      padding-bottom: 4rem;
+    }
+    .contact-info-card {
+      padding: 2.5rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .contact-method {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+    .contact-method i {
+      font-size: 1.5rem;
+      color: var(--secondary);
+      background: rgba(25, 135, 84, 0.1);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .contact-method h4 {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    .contact-method p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    @media(max-width:768px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <header></header>
+
+  <main class="container">
+    <section class="contact-hero">
+      <h1>Get in Touch</h1>
+      <p>Have questions about trading, safety, or need admin support? Drop us a line below.</p>
+    </section>
+
+    <div class="contact-grid">
+      
+      <!-- Info Column -->
+      <div class="contact-info-card glass">
+        <h3>Support & Inquiry</h3>
+        <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:1rem;">Our team is composed of student volunteers who strive to keep the platform clean and functional.</p>
+        
+        <div class="contact-method">
+          <i class="fas fa-envelope"></i>
+          <div>
+            <h4>Email Support</h4>
+            <p>support@manideals.edu</p>
+            <p>response within 24 hours</p>
+          </div>
+        </div>
+
+        <div class="contact-method">
+          <i class="fas fa-map-marker-alt"></i>
+          <div>
+            <h4>Office Location</h4>
+            <p>MIT Campus Innovation Cell</p>
+            <p>Manipal, Karnataka, 576104</p>
+          </div>
+        </div>
+
+        <div class="contact-method">
+          <i class="fas fa-shield-alt"></i>
+          <div>
+            <h4>Report Misbehavior</h4>
+            <p>abuse@manideals.edu</p>
+            <p>Immediate action taken on spam/scams</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Column -->
+      <div class="contact-info-card glass">
+        <h3>Send Message</h3>
+        <form id="contact-form" style="margin-top:1.5rem;">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="contact-name">Your Name</label>
+              <div class="input-wrapper">
+                <input type="text" id="contact-name" class="input-control" placeholder="Name" required>
+                <i class="fas fa-user"></i>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contact-email">Email Address</label>
+              <div class="input-wrapper">
+                <input type="email" id="contact-email" class="input-control" placeholder="yourname@domain.edu" required>
+                <i class="fas fa-envelope"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contact-subject">Subject</label>
+            <div class="input-wrapper">
+              <input type="text" id="contact-subject" class="input-control" placeholder="e.g. Question about listing verification" required>
+              <i class="fas fa-info-circle"></i>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:2rem;">
+            <label class="form-label" for="contact-msg">Message / Inquiry</label>
+            <textarea id="contact-msg" class="input-control" style="height:120px; padding:10px; resize:none;" placeholder="Detail your query..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;">Send Support Inquiry</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <script type="module" src="js/app.js"></script>
+  <script type="module">
+    import { showToast } from "./js/app.js";
+    document.getElementById("contact-form")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      showToast("Support message sent! We will contact you soon.", "success");
+      document.getElementById("contact-form").reset();
+    });
+  </script>
+</body>
+</html>

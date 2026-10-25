@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - ManiDealsCampus</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <header></header>
+
+  <main class="auth-wrapper">
+    <div class="auth-container glass">
+      <div class="auth-header">
+        <h2>Welcome Back</h2>
+        <p>Login to trade with your campus classmates</p>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Campus Email</label>
+          <div class="input-wrapper">
+            <input type="email" id="login-email" class="input-control" placeholder="yourname@domain.edu" required>
+            <i class="fas fa-envelope"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="login-password" class="input-control" placeholder="••••••••" required>
+            <i class="fas fa-lock"></i>
+          </div>
+        </div>
+
+        <div class="form-utils">
+          <label class="remember-me">
+            <input type="checkbox" id="remember-me">
+            Remember Me
+          </label>
+          <a href="#" class="forgot-password-link" id="trigger-forgot-password">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit-btn">Login</button>
+      </form>
+
+      <div class="divider">or login with</div>
+
+      <button class="btn btn-google" id="google-login-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+        Google Student Account
+      </button>
+
+      <div class="auth-footer">
+        Don't have a student account? <a href="signup.html">Sign Up</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal" id="forgot-password-modal">
+    <div class="modal-content glass">
+      <div class="modal-close" id="close-reset-modal">&times;</div>
+      <h3>Reset Password</h3>
+      <p style="color:var(--text-muted); margin-bottom:1.5rem; font-size:0.9rem;">Provide your registered college email below and we'll send you instructions to reset your password.</p>
+      
+      <form id="password-reset-form">
+        <div class="form-group">
+          <label class="form-label" for="reset-email">Email Address</label>
+          <div class="input-wrapper">
+            <input type="email" id="reset-email" class="input-control" placeholder="yourname@domain.edu" required>
+            <i class="fas fa-envelope"></i>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Send Reset Link</button>
+      </form>
+    </div>
+  </div>
+
+  <footer></footer>
+
+  <script type="module" src="js/app.js"></script>
+  <script type="module">
+    import { guardRoute, openModal, closeModal, showToast } from "./js/app.js";
+    import { loginUser, loginWithGoogle, resetPassword } from "./js/auth.js";
+
+    // Guard route: logged in users are redirected to dashboard
+    guardRoute(false);
+
+    document.getElementById("login-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value.trim();
+      const pass = document.getElementById("login-password").value;
+      const remember = document.getElementById("remember-me").checked;
+
+      try {
+        await loginUser(email, pass, remember);
+      } catch (err) {
+        // Handled inside auth.js
+      }
+    });
+
+    document.getElementById("google-login-btn")?.addEventListener("click", async () => {
+      await loginWithGoogle();
+    });
+
+    // Reset Modal hooks
+    const modalTrigger = document.getElementById("trigger-forgot-password");
+    const closeTrigger = document.getElementById("close-reset-modal");
+    const resetForm = document.getElementById("password-reset-form");
+
+    modalTrigger?.addEventListener("click", (e) => {
+      e.preventDefault();
+      openModal("forgot-password-modal");
+    });
+
+    closeTrigger?.addEventListener("click", () => {
+      closeModal("forgot-password-modal");
+    });
+
+    resetForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("reset-email").value.trim();
+      try {
+        await resetPassword(email);
+        closeModal("forgot-password-modal");
+        resetForm.reset();
+      } catch (err) {
+        // Handled inside auth.js
+      }
+    });
+  </script>
+</body>
+</html>

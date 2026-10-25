@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wishlist - ManiDealsCampus</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <header></header>
+
+  <main class="dashboard-wrapper">
+    <div class="container dashboard-grid">
+      
+      <!-- Sidebar -->
+      <aside class="db-sidebar">
+        <div class="db-profile-card glass">
+          <div class="profile-avatar-wrapper">
+            <img class="profile-avatar" id="db-user-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Avatar">
+          </div>
+          <h3 id="db-user-name">Loading...</h3>
+          <span class="profile-tag" id="db-user-tag">Student Member</span>
+        </div>
+
+        <nav class="db-nav glass">
+          <a href="dashboard.html" class="db-nav-link"><i class="fas fa-columns"></i> Dashboard</a>
+          <a href="exchange.html" class="db-nav-link"><i class="fas fa-sync-alt"></i> Exchanges</a>
+          <a href="wishlist.html" class="db-nav-link active"><i class="fas fa-heart"></i> Wishlist</a>
+          <a href="profile.html" class="db-nav-link"><i class="fas fa-user-edit"></i> Edit Profile</a>
+        </nav>
+      </aside>
+
+      <!-- Main Column Wishlist grid -->
+      <section class="db-main">
+        <div class="db-header">
+          <div>
+            <h2>My Saved Items</h2>
+            <p>View or delete products you saved for later purchase or exchange</p>
+          </div>
+        </div>
+
+        <div class="featured-grid" id="wishlist-grid">
+          <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+            <div class="loader" style="margin:0 auto 1rem;"></div>
+            <p>Fetching saved items...</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <script type="module" src="js/app.js"></script>
+  <script type="module">
+    import { auth, db } from "./js/firebase-config.js";
+    import { guardRoute, showToast } from "./js/app.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { doc, getDoc, getDocs, collection, updateDoc, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    guardRoute(true);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Mock user details update
+        updateSidebar(user);
+        await loadWishlistItems(user.uid);
+      }
+    });
+
+    async function updateSidebar(user) {
+      const docSnap = await getDoc(doc(db, "users", user.uid));
+      if (docSnap.exists()) {
+        const u = docSnap.data();
+        document.getElementById("db-user-avatar").src = u.photo || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80";
+        document.getElementById("db-user-name").textContent = u.name;
+        document.getElementById("db-user-tag").textContent = u.role === "admin" ? "Campus Admin" : "Student Member";
+      }
+    }
+
+    async function loadWishlistItems(userId) {
+      const grid = document.getElementById("wishlist-grid");
+      if (!grid) return;
+
+      try {
+        const userDoc = await getDoc(doc(db, "users", userId));
+        const wishlistIds = userDoc.exists() ? (userDoc.data().wishlist || []) : [];
+
+        if (wishlistIds.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1;">
+              <i class="fas fa-heart-broken"></i>
+              <h3>Your wishlist is empty</h3>
+              <p>Explore deals in the marketplace and click the heart icon to save them.</p>
+              <a href="products.html" class="btn btn-primary" style="margin-top:1rem;">Go to Marketplace</a>
+            </div>
+          `;
+          return;
+        }
+
+        // Fetch all products and filter locally
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const matchingProducts = [];
+
+        querySnapshot.forEach(docSnap => {
+          if (wishlistIds.includes(docSnap.id)) {
+            matchingProducts.push({ id: docSnap.id, ...docSnap.data() });
+          }
+        });
+
+        if (matchingProducts.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1;">
+              <i class="fas fa-heart-broken"></i>
+              <h3>No saved items available</h3>
+              <p>The items you saved may have been sold or removed by the seller.</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = "";
+        matchingProducts.forEach(product => {
+          const card = document.createElement("div");
+          card.className = "product-card glass";
+          card.id = `wishlist-${product.id}`;
+          const dateFormatted = new Date(product.createdAt).toLocaleDateString(undefined, {month: 'short', day: 'numeric'});
+
+          card.innerHTML = `
+            <div class="product-img-wrapper">
+              <a href="product-details.html?id=${product.id}">
+                <img class="product-card-img" src="${product.images?.[0] || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=350&q=80'}" alt="${product.title}">
+              </a>
+              <span class="product-badge badge badge-buy">Buy / Sell</span>
+              <button class="wishlist-btn-badge delete-wishlist-item" data-id="${product.id}" title="Remove from Wishlist">
+                <i class="fas fa-heart"></i>
+              </button>
+            </div>
+            <div class="product-info">
+              <span class="product-category">${product.category}</span>
+              <h3 class="product-title"><a href="product-details.html?id=${product.id}">${product.title}</a></h3>
+              <div class="product-meta" style="margin-top:auto;">
+                <span class="product-price">₹${product.price}</span>
+                <span class="product-date"><i class="far fa-calendar"></i> ${dateFormatted}</span>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        // Setup delete hooks
+        grid.querySelectorAll(".delete-wishlist-item").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            const pId = e.currentTarget.getAttribute("data-id");
+            await removeWishlistItem(userId, pId);
+          });
+        });
+
+      } catch (err) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>Error Loading Wishlist</h3><p>${err.message}</p></div>`;
+      }
+    }
+
+    async function removeWishlistItem(userId, productId) {
+      try {
+        await updateDoc(doc(db, "users", userId), {
+          wishlist: arrayRemove(productId)
+        });
+        showToast("Removed from wishlist.", "info");
+        document.getElementById(`wishlist-${productId}`)?.remove();
+        
+        // Check if now empty
+        const grid = document.getElementById("wishlist-grid");
+        if (grid && grid.children.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1;">
+              <i class="fas fa-heart-broken"></i>
+              <h3>Your wishlist is empty</h3>
+              <p>Explore deals in the marketplace and click the heart icon to save them.</p>
+              <a href="products.html" class="btn btn-primary" style="margin-top:1rem;">Go to Marketplace</a>
+            </div>
+          `;
+        }
+      } catch (err) {
+        showToast("Remove failed: " + err.message, "error");
+      }
+    }
+  </script>
+</body>
+</html>

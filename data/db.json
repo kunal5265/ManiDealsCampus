@@ -1,0 +1,149 @@
+{
+  "users": [
+    {
+      "uid": "admin-uid",
+      "name": "Campus Admin",
+      "email": "admin@manipal.edu",
+      "phone": "9999999999",
+      "college": "Manipal Institute of Technology",
+      "department": "Administration",
+      "year": "PG / Other",
+      "photo": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80",
+      "role": "admin",
+      "wishlist": [],
+      "createdAt": "2026-06-25T12:00:00.000Z",
+      "password": "admin123"
+    },
+    {
+      "uid": "student-uid",
+      "name": "Aditya Sen",
+      "email": "student@manipal.edu",
+      "phone": "9876543210",
+      "college": "Manipal Institute of Technology",
+      "department": "Computer Science",
+      "year": "3rd Year",
+      "photo": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&q=80",
+      "role": "student",
+      "wishlist": ["prod-book-1"],
+      "createdAt": "2026-06-25T12:05:00.000Z",
+      "password": "student123"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-book-1",
+      "title": "Introduction to Algorithms (CLRS) - 3rd Edition",
+      "description": "Standard algorithms textbook, excellent condition with minimal highlights. Critical for DSA coursework.",
+      "category": "Books",
+      "price": 650,
+      "sellerId": "admin-uid",
+      "sellerName": "Campus Admin",
+      "images": ["https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80"],
+      "status": "approved",
+      "createdAt": "2026-06-24T10:00:00.000Z"
+    },
+    {
+      "id": "prod-book-2",
+      "title": "Engineering Electromagnetics - William Hayt",
+      "description": "8th Edition Hayt textbook for ECE students. Clean pages, no torn sheets.",
+      "category": "Books",
+      "price": 400,
+      "sellerId": "student-uid",
+      "sellerName": "Aditya Sen",
+      "images": ["https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=600&q=80"],
+      "status": "approved",
+      "createdAt": "2026-06-25T08:30:00.000Z"
+    },
+    {
+      "id": "prod-stat-1",
+      "title": "Casio fx-991EX ClassWiz Scientific Calculator",
+      "description": "Supports matrix calculations, integration, and statistics. Allowed in MIT exams. Battery working perfectly.",
+      "category": "Stationery",
+      "price": 850,
+      "sellerId": "student-uid",
+      "sellerName": "Aditya Sen",
+      "images": ["https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80"],
+      "status": "approved",
+      "createdAt": "2026-06-25T09:00:00.000Z"
+    },
+    {
+      "id": "prod-stat-2",
+      "title": "Professional A1 Size Drawing Board with T-Square",
+      "description": "Perfect for First-Year Engineering Graphics lab. Comes with carrying case and drawing sheet clips.",
+      "category": "Stationery",
+      "price": 1200,
+      "sellerId": "admin-uid",
+      "sellerName": "Campus Admin",
+      "images": ["https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=600&q=80"],
+      "status": "approved",
+      "createdAt": "2026-06-23T11:45:00.000Z"
+    },
+    {
+      "id": "prod-elec-1",
+      "title": "Dell 24-inch SE2422H IPS Monitor",
+      "description": "Full HD, HDMI & VGA inputs. Great for coding, dual-screen setup, and streaming. Under warranty.",
+      "category": "Electronics",
+      "price": 5500,
+      "sellerId": "student-uid",
+      "sellerName": "Aditya Sen",
+      "images": ["https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80"],
+      "status": "approved",
+      "createdAt": "2026-06-25T14:10:00.000Z"
+    },
+    {
+      "id": "prod-cycle-1",
+      "title": "Decathlon Rockrider ST100 MTB",
+      "description": "21-speed gears, 27.5 inch wheels. Perfect for MIT campus hills. Serviced recently, tires in great condition.",
+      "category": "Cycles",
+      "price": 7500,
+      "sellerId": "student-uid",
+      "sellerName": "Aditya Sen",
+      "images": ["https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=600&q=80"],
+      "status": "approved",
+      "createdAt": "2026-06-25T14:20:00.000Z"
+    },
+    {
+      "id": "prod-hostel-1",
+      "title": "Coir Single Mattress (3x6 feet)",
+      "description": "Orthopedic firm coir mattress, fits standard MIT hostel single beds. Clean, sanitized, and only 6 months old.",
+      "category": "Hostel Essentials",
+      "price": 1800,
+      "sellerId": "student-uid",
+      "sellerName": "Aditya Sen",
+      "images": ["https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80"],
+      "status": "approved",
+      "createdAt": "2026-06-25T14:30:00.000Z"
+    },
+    {
+      "id": "prod-pending-1",
+      "title": "Calculus: Early Transcendentals - James Stewart",
+      "description": "8th Edition Stewart Calculus. Essential for Math-I and Math-II semesters. Brand new condition.",
+      "category": "Books",
+      "price": 500,
+      "sellerId": "student-uid",
+      "sellerName": "Aditya Sen",
+      "images": ["https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=600&q=80"],
+      "status": "pending",
+      "createdAt": "2026-06-25T15:00:00.000Z"
+    }
+  ],
+  "exchanges": [],
+  "notifications": [
+    {
+      "id": "notif-1",
+      "userId": "student-uid",
+      "title": "Listing Approved",
+      "message": "Your listing 'Casio fx-991EX Scientific Calculator' has been approved by the moderator.",
+      "read": false,
+      "createdAt": "2026-06-25T09:05:00.000Z"
+    }
+  ],
+  "activity": [
+    {
+      "id": "act-1",
+      "userId": "student-uid",
+      "description": "Listed 'Casio fx-991EX Scientific Calculator' for ₹850.",
+      "createdAt": "2026-06-25T09:00:00.000Z"
+    }
+  ]
+}

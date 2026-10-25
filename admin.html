@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - ManiDealsCampus</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <header></header>
+
+  <main class="dashboard-wrapper">
+    <div class="container dashboard-grid" style="grid-template-columns: 1fr;">
+      
+      <!-- Moderation Screen -->
+      <section class="db-main" id="admin-main" style="display:none;">
+        <div class="db-header">
+          <div>
+            <h2>Admin Moderation Dashboard</h2>
+            <p>Review student product listings, manage user reports, and monitor platform analytics</p>
+          </div>
+          <a href="dashboard.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+
+        <!-- Moderation Analytics -->
+        <div class="stats-grid">
+          <div class="stat-card glass">
+            <div class="stat-icon" style="background:rgba(52, 152, 219, 0.1); color:#2980b9;"><i class="fas fa-boxes"></i></div>
+            <div class="stat-details">
+              <h4 id="admin-stat-total">0</h4>
+              <span>Total Listings</span>
+            </div>
+          </div>
+
+          <div class="stat-card glass">
+            <div class="stat-icon" style="background:rgba(241, 196, 15, 0.1); color:#d4ac0d;"><i class="fas fa-hourglass-half"></i></div>
+            <div class="stat-details">
+              <h4 id="admin-stat-pending">0</h4>
+              <span>Pending Reviews</span>
+            </div>
+          </div>
+
+          <div class="stat-card glass">
+            <div class="stat-icon" style="background:rgba(155, 89, 182, 0.1); color:#8e44ad;"><i class="fas fa-users"></i></div>
+            <div class="stat-details">
+              <h4 id="admin-stat-users">0</h4>
+              <span>Total Students</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending approvals -->
+        <div class="panel-card glass" style="margin-top:2rem;">
+          <div class="panel-header">
+            <h3>Pending Listings Approvals</h3>
+          </div>
+          
+          <div class="pending-approvals-list" id="pending-list">
+            <div style="text-align:center; padding:3rem;">
+              <div class="loader" style="margin: 0 auto 1rem;"></div>
+              <p>Fetching pending listings...</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Access Denied -->
+      <section class="db-main" id="access-denied" style="display:none; text-align:center; padding: 5rem 2rem;">
+        <div class="empty-state">
+          <i class="fas fa-user-shield" style="font-size: 5rem; color:#e74c3c; margin-bottom:2rem;"></i>
+          <h2>Access Denied</h2>
+          <p style="margin-bottom:2rem;">This page is restricted to platform administrators only.</p>
+          <a href="dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <script type="module" src="js/app.js"></script>
+  <script type="module">
+    import { 
+      auth, 
+      db, 
+      onAuthStateChanged,
+      doc, 
+      getDoc, 
+      getDocs, 
+      collection, 
+      query, 
+      where, 
+      updateDoc, 
+      deleteDoc 
+    } from "./js/firebase-config.js";
+    import { guardRoute, showToast } from "./js/app.js";
+
+    guardRoute(true);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Authenticate admin role
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists() && userDoc.data().role === "admin") {
+            document.getElementById("admin-main").style.display = "block";
+            await loadAdminAnalytics();
+            await loadPendingListings();
+          } else {
+            document.getElementById("access-denied").style.display = "block";
+          }
+        } catch (err) {
+          showToast("Validation failed: " + err.message, "error");
+          document.getElementById("access-denied").style.display = "block";
+        }
+      }
+    });
+
+    async function loadAdminAnalytics() {
+      try {
+        const [productsSnap, usersSnap] = await Promise.all([
+          getDocs(collection(db, "products")),
+          getDocs(collection(db, "users"))
+        ]);
+
+        let total = productsSnap.size;
+        let pending = 0;
+        productsSnap.forEach(docSnap => {
+          if (docSnap.data().status === "pending") {
+            pending++;
+          }
+        });
+
+        document.getElementById("admin-stat-total").textContent = total;
+        document.getElementById("admin-stat-pending").textContent = pending;
+        document.getElementById("admin-stat-users").textContent = usersSnap.size;
+      } catch (err) {
+        console.error("Error loading admin stats:", err);
+      }
+    }
+
+    async function loadPendingListings() {
+      const listContainer = document.getElementById("pending-list");
+      if (!listContainer) return;
+
+      try {
+        const q = query(collection(db, "products"), where("status", "==", "pending"));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          listContainer.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-check-double" style="color:var(--secondary);"></i>
+              <h3>All listings reviewed</h3>
+              <p>There are no product listings awaiting approval at this time.</p>
+            </div>
+          `;
+          return;
+        }
+
+        listContainer.innerHTML = "";
+        querySnapshot.forEach(docSnap => {
+          const product = docSnap.data();
+          const pId = docSnap.id;
+          const card = document.createElement("div");
+          card.className = "pending-card glass";
+          card.id = `pending-card-${pId}`;
+          const dateFormatted = new Date(product.createdAt).toLocaleDateString();
+
+          card.innerHTML = `
+            <img class="pending-img" src="${product.images?.[0] || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=150&q=80'}" alt="Cover">
+            <div class="pending-info">
+              <h4>${product.title}</h4>
+              <div class="pending-meta">
+                <span>Category: <strong>${product.category}</strong></span> • 
+                <span>Seller: <strong>${product.sellerName || 'Student'}</strong></span> • 
+                <span>Date: <strong>${dateFormatted}</strong></span>
+              </div>
+              <div style="font-size:1.2rem; color:var(--secondary); font-weight:700; margin-bottom:8px;">₹${product.price}</div>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px; max-width:600px;">${product.description}</p>
+              
+              <div class="pending-actions">
+                <button class="btn btn-primary approve-btn" data-id="${pId}" style="padding: 6px 16px; font-size:0.85rem;"><i class="fas fa-check"></i> Approve</button>
+                <button class="btn btn-secondary reject-btn" data-id="${pId}" style="padding: 6px 16px; font-size:0.85rem; color:#e74c3c; border-color:#e74c3c;"><i class="fas fa-trash-alt"></i> Reject/Delete</button>
+              </div>
+            </div>
+          `;
+          listContainer.appendChild(card);
+        });
+
+        // Setup triggers
+        listContainer.querySelectorAll(".approve-btn").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            const id = e.currentTarget.getAttribute("data-id");
+            await handleApprove(id);
+          });
+        });
+
+        listContainer.querySelectorAll(".reject-btn").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            const id = e.currentTarget.getAttribute("data-id");
+            if (confirm("Are you sure you want to reject and delete this product?")) {
+              await handleReject(id);
+            }
+          });
+        });
+
+      } catch (err) {
+        listContainer.innerHTML = `<div class="empty-state"><h3>Failed to load reviews</h3><p>${err.message}</p></div>`;
+      }
+    }
+
+    async function handleApprove(productId) {
+      try {
+        await updateDoc(doc(db, "products", productId), {
+          status: "approved"
+        });
+        showToast("Listing approved!", "success");
+        document.getElementById(`pending-card-${productId}`)?.remove();
+        
+        // Refresh stats
+        await loadAdminAnalytics();
+        
+        // Check if empty
+        const list = document.getElementById("pending-list");
+        if (list && list.children.length === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-check-double" style="color:var(--secondary);"></i>
+              <h3>All listings reviewed</h3>
+              <p>There are no product listings awaiting approval at this time.</p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        showToast("Approval failed: " + err.message, "error");
+      }
+    }
+
+    async function handleReject(productId) {
+      try {
+        await deleteDoc(doc(db, "products", productId));
+        showToast("Listing rejected and deleted.", "info");
+        document.getElementById(`pending-card-${productId}`)?.remove();
+        
+        // Refresh stats
+        await loadAdminAnalytics();
+        
+        // Check if empty
+        const list = document.getElementById("pending-list");
+        if (list && list.children.length === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-check-double" style="color:var(--secondary);"></i>
+              <h3>All listings reviewed</h3>
+              <p>There are no product listings awaiting approval at this time.</p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        showToast("Deletion failed: " + err.message, "error");
+      }
+    }
+  </script>
+</body>
+</html>

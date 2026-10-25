@@ -1,0 +1,290 @@
+/* ManiDealsCampus CSS Stylesheet - Marketplace and Products Layout */
+
+.marketplace-wrapper {
+  padding: calc(var(--header-height) + 2rem) 0 4rem;
+}
+
+.marketplace-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2.5rem;
+}
+
+/* Sidebar Filters */
+.filters-sidebar {
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-border);
+  height: fit-content;
+}
+
+.filter-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.filter-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: var(--primary);
+}
+
+[data-theme="dark"] .filter-title {
+  color: #fff;
+}
+
+/* Price Range Slider */
+.price-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.price-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.price-input-group label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.price-field {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 0.85rem;
+}
+
+/* Checkbox lists */
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.checkbox-item input {
+  accent-color: var(--secondary);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Products Main Header */
+.products-main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.search-results-info {
+  color: var(--text-muted);
+}
+
+.search-results-info span {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.products-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.products-sort-controls label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.sort-select {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Product Detail Page Styles */
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  margin-top: calc(var(--header-height) + 2rem);
+}
+
+/* Image gallery */
+.details-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.main-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnails-list {
+  display: flex;
+  gap: 12px;
+}
+
+.thumbnail-img {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.thumbnail-img:hover, .thumbnail-img.active {
+  border-color: var(--secondary);
+  opacity: 0.9;
+}
+
+/* Details Info Card */
+.details-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.details-header {
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 1.5rem;
+}
+
+.details-header .product-title {
+  font-size: 2.2rem;
+  margin: 0.5rem 0;
+  white-space: normal;
+}
+
+.details-header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.details-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.details-desc h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+}
+
+.details-desc p {
+  color: var(--text-muted);
+}
+
+/* Action buttons details */
+.details-actions {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.details-actions .btn {
+  flex: 1;
+}
+
+/* Seller Card Details */
+.seller-card {
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.seller-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.seller-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.seller-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.seller-info-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* No listings found state */
+.empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}

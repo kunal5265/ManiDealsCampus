@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Sign Up - ManiDealsCampus</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <header></header>
+
+  <main class="auth-wrapper">
+    <div class="auth-container glass" style="max-width: 550px;">
+      <div class="auth-header">
+        <h2>Create Student Account</h2>
+        <p>Register to start exchanging and buying on campus</p>
+      </div>
+
+      <form id="signup-form">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="signup-name">Full Name</label>
+            <div class="input-wrapper">
+              <input type="text" id="signup-name" class="input-control" placeholder="Aditya Sen" required>
+              <i class="fas fa-user"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signup-phone">Phone Number</label>
+            <div class="input-wrapper">
+              <input type="tel" id="signup-phone" class="input-control" placeholder="9876543210" required>
+              <i class="fas fa-phone"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-email">College Email Address</label>
+          <div class="input-wrapper">
+            <input type="email" id="signup-email" class="input-control" placeholder="yourname@domain.edu" required>
+            <i class="fas fa-envelope"></i>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="signup-password">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="signup-password" class="input-control" placeholder="••••••••" required minlength="6">
+              <i class="fas fa-lock"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signup-confirm-password">Confirm Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="signup-confirm-password" class="input-control" placeholder="••••••••" required minlength="6">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-college">College / University</label>
+          <div class="input-wrapper">
+            <select id="signup-college" class="input-control" style="padding-left: 48px;" required>
+              <option value="" disabled selected>Select Campus</option>
+              <option value="Manipal Institute of Technology">Manipal Institute of Technology (MIT)</option>
+              <option value="Kasturba Medical College">Kasturba Medical College (KMC)</option>
+              <option value="Manipal College of Dental Sciences">Manipal College of Dental Sciences</option>
+              <option value="TAPMI">TAPMI Manipal</option>
+              <option value="Sikkim Manipal University">Sikkim Manipal University</option>
+              <option value="Other Campus">Other / Partner Institute</option>
+            </select>
+            <i class="fas fa-university"></i>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="signup-dept">Department / Stream</label>
+            <div class="input-wrapper">
+              <input type="text" id="signup-dept" class="input-control" placeholder="Computer Science" required>
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signup-year">Academic Year</label>
+            <div class="input-wrapper">
+              <select id="signup-year" class="input-control" style="padding-left: 48px;" required>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="PG / Other">PG / Other</option>
+              </select>
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+          <label class="remember-me" style="font-size:0.85rem;">
+            <input type="checkbox" required>
+            I agree to the ManiDealsCampus Honor Code & Terms.
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit-btn">Register Account</button>
+      </form>
+
+      <div class="auth-footer">
+        Already have a student account? <a href="login.html">Login</a>
+      </div>
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <script type="module" src="js/app.js"></script>
+  <script type="module">
+    import { guardRoute, showToast } from "./js/app.js";
+    import { signUpUser } from "./js/auth.js";
+
+    // Guard route: logged in users are redirected to dashboard
+    guardRoute(false);
+
+    document.getElementById("signup-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("signup-name").value.trim();
+      const phone = document.getElementById("signup-phone").value.trim();
+      const email = document.getElementById("signup-email").value.trim();
+      const pass = document.getElementById("signup-password").value;
+      const confirmPass = document.getElementById("signup-confirm-password").value;
+      const college = document.getElementById("signup-college").value;
+      const dept = document.getElementById("signup-dept").value.trim();
+      const year = document.getElementById("signup-year").value;
+
+      if (pass !== confirmPass) {
+        showToast("Passwords do not match!", "error");
+        return;
+      }
+
+      try {
+        await signUpUser(email, pass, name, phone, college, dept, year);
+      } catch (err) {
+        // Error already handled and shown by toast inside auth.js
+      }
+    });
+  </script>
+</body>
+</html>
