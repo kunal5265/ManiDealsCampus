@@ -128,6 +128,11 @@ export async function loginWithGoogle() {
 
 export class GoogleAuthProvider {}
 
+// Popup sign-in alias so modules written against the Firebase SDK keep working
+export async function signInWithPopup(authObj, provider) {
+  return loginWithGoogle();
+}
+
 // Sign Out
 export async function signOut(authObj) {
   await fetch("/api/auth/logout", { method: "POST" });
